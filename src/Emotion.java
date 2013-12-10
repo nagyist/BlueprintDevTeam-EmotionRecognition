@@ -6,7 +6,7 @@ public class Emotion {
 	public int pitch;
 	public int intensity; 
 
-	public Emotion(String n,float s,int p,int i) {
+	public Emotion(String n, float s, int p, int i) {
 
 		this.name = n;
 		this.speed = s;
