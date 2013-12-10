@@ -1,0 +1,10 @@
+Dempster Shafer Algorithmus:
+
+- Sprechgeschwindigkeit: X.X float (Beispieldaten min: 2.9, max: 5,5)
+- Durchschnittliche Tonlage: sehr niedrig, niedrig, normal, hoch, sehr hoch
+- Schallstärke (Intensität): sehr niedrig, niedrig, normal, hoch, sehr hoch
+- Basisemotionen: Angst, Überraschung, Wut, Freude, Ekel, Traurigkeit, Furcht
+
+
+
+	
