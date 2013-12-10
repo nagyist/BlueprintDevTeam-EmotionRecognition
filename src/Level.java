@@ -1,5 +1,5 @@
 
-public enum Grades {
+public enum Level {
 	
 	VERYLOW,
 	LOW,
