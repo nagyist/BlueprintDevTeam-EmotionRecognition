@@ -3,10 +3,10 @@ public class Emotion {
 
 	public String name;
 	public float speed;
-	public Level pitch;
-	public Level intensity; 
+	public int pitch;
+	public int intensity; 
 
-	public Emotion(String n,float s,Level p,Level i) {
+	public Emotion(String n,float s,int p,int i) {
 
 		this.name = n;
 		this.speed = s;
