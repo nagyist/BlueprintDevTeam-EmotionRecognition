@@ -5,6 +5,8 @@ Dempster Shafer Algorithmus:
 - Schallstärke (Intensität): sehr niedrig, niedrig, normal, hoch, sehr hoch
 - Basisemotionen: Angst, Überraschung, Wut, Freude, Ekel, Traurigkeit
 
+Algorithmus:
 
+1. Messwert Entspricht 3 "Zeugenaussagen", je eine für jedes Attribut
 
 	
