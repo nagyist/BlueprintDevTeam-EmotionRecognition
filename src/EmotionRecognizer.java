@@ -4,8 +4,14 @@ import java.util.List;
 
 public class EmotionRecognizer {
 
+	/* TODO: Finale Checks
+	 * Kommentare entfernen
+	 */
 	public static void main(String[] args) throws IOException {
 		
+//		Measurement m = new Measurement(1.2f, 3, 3);
+//		m.measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
+
 		List<Emotion> emotions = new LinkedList<Emotion>();
 		List<Measurement> measurements = new LinkedList<Measurement>();
 		
@@ -29,7 +35,7 @@ public class EmotionRecognizer {
 		emotions.add(new Emotion("sadness",	4.1f, 1, 1));
 
 		
-		measurements.add(new Measurement(5.5f, 3, 3));
+		measurements.add(new Measurement(0, 5.5f, 3, 3));
 	}
 	
 	public Float dempsterShafer(Emotion e, Measurement m) {
