@@ -27,14 +27,17 @@ public class EvidenceManager {
 	}
 	
 	//TODO: Hinweis einfuegen "Achtung, dabei werden alle bisherigen Evid. geloescht! Fortfahren?"
-	public void generateEvidenceMatrix (Measurement m) {
+	public void generateEvidenceMatrix (Measurement m) 
+			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
+					IllegalAccessException, InvocationTargetException {
 		
-		//generateEvidences(m);
-		
+		generateEvidences(m);
 		
 	}
 	
-	public void generateEvidences (Measurement m) throws SecurityException, NoSuchMethodException  {
+	public void generateEvidences (Measurement m) 
+			throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
+					IllegalAccessException, InvocationTargetException {
 		
 		setUpEvidences();
 		
@@ -44,21 +47,11 @@ public class EvidenceManager {
 				
 				Method methodGet = Emotion.class.getMethod("get" + marker);
 				
-				try {
-					if((Float) methodGet.invoke(e) < (Float) methodGet.invoke(m) + Accuracy ||
-							(Float) methodGet.invoke(e) > (Float) methodGet.invoke(m) - Accuracy) {
-						
-						Evidences.get(marker).add(e.Name);
-					}
-				} catch (IllegalArgumentException exeption) {
-					// TODO Auto-generated catch block
-					exeption.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (InvocationTargetException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+			
+				if((Float) methodGet.invoke(e) < (Float) methodGet.invoke(m) + Accuracy ||
+						(Float) methodGet.invoke(e) > (Float) methodGet.invoke(m) - Accuracy) {
+					
+					Evidences.get(marker).add(e.Name);
 				}
 			}
 		}

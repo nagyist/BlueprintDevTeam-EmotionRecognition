@@ -3,7 +3,7 @@
   associations="true" dependencies="true" nesting-relationships="true">  
   <class id="1" language="java" name="EmotionManager" project="EmotionRecognition" 
     file="/EmotionRecognition/src/EmotionManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="152" width="183" x="278" y="211"/>    
+    <position height="152" width="183" x="795" y="328"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="Measurement" project="EmotionRecognition" 
     file="/EmotionRecognition/src/Measurement.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="152" width="180" x="543" y="457"/>    
+    <position height="98" width="180" x="487" y="628"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,126 +21,143 @@
   </class>  
   <class id="3" language="java" name="EvidenceManager" project="EmotionRecognition" 
     file="/EmotionRecognition/src/EvidenceManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="116" width="268" x="238" y="1"/>    
+    <position height="188" width="268" x="304" y="100"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="4" language="java" name="Level" project="EmotionRecognition" 
+  <class id="4" language="java" name="Marker" project="EmotionRecognition" file="/EmotionRecognition/src/Marker.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="260" width="136" x="577" y="328"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="5" language="java" name="Level" project="EmotionRecognition" 
     file="/EmotionRecognition/src/Level.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="170" width="137" x="45" y="1"/>    
+    <position height="170" width="137" x="97" y="100"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="5" language="java" name="Emotion" project="EmotionRecognition" file="/EmotionRecognition/src/Emotion.java" 
+  <class id="6" language="java" name="Emotion" project="EmotionRecognition" file="/EmotionRecognition/src/Emotion.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="152" width="169" x="278" y="457"/>    
+    <position height="98" width="169" x="795" y="628"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="EmotionRecognizer" project="EmotionRecognition" 
+  <class id="7" language="java" name="EmotionRecognizer" project="EmotionRecognition" 
     file="/EmotionRecognition/src/EmotionRecognizer.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="116" width="307" x="546" y="1"/>    
+    <position height="116" width="307" x="755" y="100"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="Evidence" project="EmotionRecognition" 
+  <class id="8" language="java" name="Evidence" project="EmotionRecognition" 
     file="/EmotionRecognition/src/Evidence.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="98" width="188" x="29" y="211"/>    
+    <position height="116" width="177" x="66" y="328"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="MeasurementManager" project="EmotionRecognition" 
+  <class id="9" language="java" name="MeasurementManager" project="EmotionRecognition" 
     file="/EmotionRecognition/src/MeasurementManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="206" width="233" x="543" y="211"/>    
+    <position height="260" width="233" x="304" y="328"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="9">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="10" name="emotions"/>      
-      <multiplicity id="11" minimum="0" maximum="2147483647"/>    
+  <dependency id="10">    
+    <bendpoint x="1008" y="328"/>    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <association id="12">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="13" name="EvidenceMatrix"/>      
+      <multiplicity id="14" minimum="0" maximum="2147483647"/>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="12">    
-    <bendpoint x="512" y="211"/>    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <dependency id="13">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="8"/>  
-  </dependency>  
-  <dependency id="14">    
-    <bendpoint x="247" y="211"/>    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
   <dependency id="15">    
-    <bendpoint x="806" y="211"/>    
-    <end type="SOURCE" refId="6"/>    
+    <bendpoint x="764" y="328"/>    
+    <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
-  <association id="16">    
+  <generalization id="16">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <dependency id="17">    
+    <bendpoint x="743" y="328"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <association id="18">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="17" name="emotionManager"/>      
-      <multiplicity id="18" minimum="0" maximum="1"/>    
+      <attribute id="19" name="EmotionManager"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="19">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="20" name="evidenceMatrix"/>      
-      <multiplicity id="21" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
   <association id="22">    
-    <end type="SOURCE" refId="8" navigable="false">      
+    <end type="SOURCE" refId="9" navigable="false">      
       <attribute id="23" name="measurements"/>      
       <multiplicity id="24" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="25">    
-    <bendpoint x="491" y="211"/>    
+  <association id="25">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="26" name="MeasurementManager"/>      
+      <multiplicity id="27" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="28">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="29" name="emotions"/>      
+      <multiplicity id="30" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="31">    
+    <bendpoint x="273" y="328"/>    
     <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
-  <dependency id="26">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <association id="27">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="28" name="measurementManager"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
+  <generalization id="32">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
