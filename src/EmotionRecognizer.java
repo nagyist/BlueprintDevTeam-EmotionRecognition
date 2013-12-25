@@ -7,6 +7,7 @@ public class EmotionRecognizer {
 	 * Kommentare entfernen
 	 * Einheitliche Bezeichner (z.B. e ist immer Emotionion und nicht mal Emotion und mal Emotionen-Liste)
 	 * Was public, was private, was ... ???
+	 * Konventionen (Gro§-/Kleinschreibung)
 	 */
 	public static void main(String[] args) throws IOException {
 		

@@ -1,13 +1,13 @@
 
 public class Emotion extends Marker{
 
-	public String name;
+	public String Name;
 
 	public Emotion(String n, float s, int p, int i) {
 
-		name = n;
-		speed = s;
-		pitch = p;
-		intensity = i;
+		Name = n;
+		Speed = s;
+		Pitch = p;
+		Intensity = i;
 	}
 }

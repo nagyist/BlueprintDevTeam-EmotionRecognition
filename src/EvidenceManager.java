@@ -1,73 +1,78 @@
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
+
 public class EvidenceManager {
 
-	EmotionManager emotionManager;
-	MeasurementManager measurementManager;
-	Map<String, Set<String>> evidences;
-	Set<Evidence> evidenceMatrix;
-	int accuracy;
-	String[] marker;
+	EmotionManager EmotionManager;
+	MeasurementManager MeasurementManager;
+	Map<String, Set<String>> Evidences;
+	Set<Evidence> EvidenceMatrix;
+	int Accuracy;
+	String[] Marker;
 	
 	public EvidenceManager(int a) {
 	
-		emotionManager = new EmotionManager();
-		measurementManager = new MeasurementManager();
-		evidences = new HashMap<String, Set<String>>();
-		evidenceMatrix = new HashSet<Evidence>();
-		accuracy = a;
-		marker = new Emotion("dummy", 0f, 0, 0).getMarkers();
+		EmotionManager = new EmotionManager();
+		MeasurementManager = new MeasurementManager();
+		Evidences = new HashMap<String, Set<String>>();
+		EvidenceMatrix = new HashSet<Evidence>();
+		Accuracy = a;
+		Marker = new Emotion("dummy", 0f, 0, 0).getMarkers();
 	}
 	
 	//TODO: Hinweis einfuegen "Achtung, dabei werden alle bisherigen Evid. geloescht! Fortfahren?"
 	public void generateEvidenceMatrix (Measurement m) {
 		
-		generateEvidences(m);
+		//generateEvidences(m);
 		
 		
 	}
 	
-	public void generateEvidences (Measurement m)  {
+	public void generateEvidences (Measurement m) throws SecurityException, NoSuchMethodException  {
 		
 		setUpEvidences();
 		
-		for (Emotion e : emotionManager.getEmotions()) {
+		for (Emotion e : EmotionManager.getEmotions()) {
 			
-			if (e.speed < m.speed + accuracy || e.speed > m.speed -1) {
+			for (String marker : Marker) {
 				
-				evidences.get("speed").add(e.name);
-			}
-			
-			if (e.pitch < m.pitch + accuracy || e.pitch > m.pitch -1) {
+				Method methodGet = Emotion.class.getMethod("get" + marker);
 				
-				emotionSets.get(Marker.PITCH).add(e.name);
-			
+				try {
+					if((Float) methodGet.invoke(e) < (Float) methodGet.invoke(m) + Accuracy ||
+							(Float) methodGet.invoke(e) > (Float) methodGet.invoke(m) - Accuracy) {
+						
+						Evidences.get(marker).add(e.Name);
+					}
+				} catch (IllegalArgumentException exeption) {
+					// TODO Auto-generated catch block
+					exeption.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InvocationTargetException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			
-			if (e.intensity < m.intensity + accuracy || e.intensity > m.intensity -1) {
-				
-				emotionSets.get(Marker.INTENSITY).add(e.name);
-			}
-			
-			emotionSets.get().add(e.name);
-
 		}
 	} 
 	
 	public void setUpEvidences () {
 	
 		//TODO: Abbrechen, wenn emotionenListe leer
-		evidences.clear();
+		Evidences.clear();
 		
-		for (String m : marker) {
+		for (String m : Marker) {
 			
-			evidences.put(m, null);
+			Evidences.put(m, null);
+			Evidences.put(m + "Omega", null);
 		}
 	}
 }

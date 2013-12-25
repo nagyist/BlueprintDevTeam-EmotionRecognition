@@ -31,7 +31,7 @@ public class EmotionManager {
 		
 		for (Emotion e : emotions) {
 			
-			if(e.name == n) {
+			if(e.Name == n) {
 				
 				emotions.remove(e);
 			}

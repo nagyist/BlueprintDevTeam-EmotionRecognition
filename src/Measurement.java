@@ -6,8 +6,8 @@ public class Measurement extends Marker{
 	public Measurement (int b, float s, int p, int i) {
 
 		id = b;
-		speed = s;
-		pitch = p;
-		intensity = i;
+		Speed = s;
+		Pitch = p;
+		Intensity = i;
 	}
 }
