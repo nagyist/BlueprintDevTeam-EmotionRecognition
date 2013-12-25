@@ -12,6 +12,17 @@ public abstract class Marker {
 		return r;
 	}
 
+	public float getAnyValue(String marker) {
+		
+		float f = 0f;
+		
+		if(marker.equals("Speed"))	f = getSpeed();
+		if(marker.equals("Pitch"))	f = getPitch();
+		if(marker.equals("Intensity")) f = getIntensity();
+		
+		return f;
+	}
+	
 	public float getSpeed() {
 		return Speed;
 	}

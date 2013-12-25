@@ -1,11 +1,8 @@
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-
 
 public class EvidenceManager {
 
@@ -29,15 +26,25 @@ public class EvidenceManager {
 	//TODO: Hinweis einfuegen "Achtung, dabei werden alle bisherigen Evid. geloescht! Fortfahren?"
 	public void generateEvidenceMatrix (Measurement m) 
 			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
-					IllegalAccessException, InvocationTargetException {
+					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
 		generateEvidences(m);
+		
+		for (String ss : Evidences.keySet()) {
+			
+			System.out.println(ss);
+			
+			for (String s : Evidences.get(ss)) {
+				
+				System.out.println(s);
+			}
+		}
 		
 	}
 	
 	public void generateEvidences (Measurement m) 
 			throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
-					IllegalAccessException, InvocationTargetException {
+					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
 		setUpEvidences();
 		
@@ -45,14 +52,13 @@ public class EvidenceManager {
 			
 			for (String marker : Marker) {
 				
-				Method methodGet = Emotion.class.getMethod("get" + marker);
-				
-			
-				if((Float) methodGet.invoke(e) < (Float) methodGet.invoke(m) + Accuracy ||
-						(Float) methodGet.invoke(e) > (Float) methodGet.invoke(m) - Accuracy) {
+				if( e.getAnyValue(marker) <= m.getAnyValue(marker) + Accuracy &&
+						e.getAnyValue(marker) >= m.getAnyValue(marker) - Accuracy) {
 					
 					Evidences.get(marker).add(e.Name);
 				}
+				
+				Evidences.get(marker + "Omega").add(e.Name);
 			}
 		}
 	} 
@@ -64,8 +70,8 @@ public class EvidenceManager {
 		
 		for (String m : Marker) {
 			
-			Evidences.put(m, null);
-			Evidences.put(m + "Omega", null);
+			Evidences.put(m, new HashSet<String>());
+			Evidences.put(m + "Omega", new HashSet<String>());
 		}
 	}
 }

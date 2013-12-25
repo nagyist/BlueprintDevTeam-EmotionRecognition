@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class EmotionRecognizer {
@@ -9,15 +10,33 @@ public class EmotionRecognizer {
 	 * Was public, was private, was ... ???
 	 * Konventionen (Gro§-/Kleinschreibung)
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, NoSuchFieldException {
 		
-		EmotionManager emotions = new EmotionManager();
-		MeasurementManager measurements = new MeasurementManager();
+		EvidenceManager em = new EvidenceManager(1);
 
-		emotions.loadDefault();
-		measurements.measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
+		em.EmotionManager.loadDefault();
+		em.MeasurementManager.measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
 
+		Measurement m = em.MeasurementManager.getMeasurement(1);
 		
+		try {
+			em.generateEvidenceMatrix(m);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public Float dempsterShafer(List<Emotion> e, Measurement m) {

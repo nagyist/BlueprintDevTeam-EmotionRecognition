@@ -37,6 +37,7 @@ public class MeasurementManager {
 		try {
 			 
 			br = new BufferedReader(new FileReader(filename));
+			br.readLine();
 			
 			while ((line = br.readLine()) != null) {
 	 
@@ -46,8 +47,12 @@ public class MeasurementManager {
 					//TODO: Throw a "Wrong CSV Format" Exception
 				}
 				
-				measurements.add(new Measurement(Integer.parseInt(value[0]), Float.parseFloat(value[1]), 
-						Integer.parseInt(value[2]), Integer.parseInt(value[3])));
+				measurements.add(new Measurement(
+						Integer.parseInt(value[0]), 
+						Float.parseFloat(value[1].replaceAll(",", ".")),
+						wordToScale(value[2]), 
+						wordToScale(value[3])
+				));
 			}
 	 
 		} catch (FileNotFoundException e) {
@@ -65,6 +70,20 @@ public class MeasurementManager {
 		}
 	}
 	
+	public int wordToScale (String w) {
+		
+		int r = 0;
+		
+		if (w.equals("sehr niedrig"))	r = 1;
+		if (w.equals("niedrig"))		r = 2;
+		if (w.equals("normal"))			r = 3;
+		if (w.equals("hoch"))			r = 4;
+		if (w.equals("sehr hoch"))		r = 5;
+
+		return r;
+			
+	}
+	
 	public void addMeasurement (Measurement m) {
 		
 		measurements.add(m);
@@ -79,6 +98,10 @@ public class MeasurementManager {
 				measurements.remove(m);
 			}
 		}
+	}
+	
+	public Measurement getMeasurement(int index) {
+		return measurements.get(index);
 	}
 	
 	public float getWeightSpeed() {
