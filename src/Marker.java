@@ -12,6 +12,17 @@ public abstract class Marker {
 		return r;
 	}
 
+	public Float getWeight (String marker) {
+		
+		float w = 0f;
+		
+		if (marker.equals("Speed"))	w = 0.8f;
+		if (marker.equals("Pitch"))	w = 0.6f;
+		if (marker.equals("Intensity"))	w = 0.7f;
+		
+		return w;
+	}
+	
 	public float getAnyValue(String marker) {
 		
 		float f = 0f;

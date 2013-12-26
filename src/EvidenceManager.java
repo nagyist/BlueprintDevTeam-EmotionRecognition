@@ -8,7 +8,7 @@ public class EvidenceManager {
 
 	EmotionManager EmotionManager;
 	MeasurementManager MeasurementManager;
-	Map<String, Set<String>> Evidences;
+	Map<String, Evidence> BasicEvidences;
 	Set<Evidence> EvidenceMatrix;
 	int Accuracy;
 	String[] Marker;
@@ -17,7 +17,7 @@ public class EvidenceManager {
 	
 		EmotionManager = new EmotionManager();
 		MeasurementManager = new MeasurementManager();
-		Evidences = new HashMap<String, Set<String>>();
+		BasicEvidences = new HashMap<String, Evidence>();
 		EvidenceMatrix = new HashSet<Evidence>();
 		Accuracy = a;
 		Marker = new Emotion("dummy", 0f, 0, 0).getMarkers();
@@ -28,50 +28,51 @@ public class EvidenceManager {
 			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
 					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
-		generateEvidences(m);
+		setUpBasicEvidences();
+		generateBasicEvidences(m);
 		
-		for (String ss : Evidences.keySet()) {
+		for (String ma : BasicEvidences.keySet()) {
 			
-			System.out.println(ss);
+			System.out.println(ma);
 			
-			for (String s : Evidences.get(ss)) {
-				
-				System.out.println(s);
-			}
+			System.out.println(BasicEvidences.get(ma).getEmotionnames());
+			System.out.println(BasicEvidences.get(ma).getWeight());
+			
 		}
 		
 	}
 	
-	public void generateEvidences (Measurement m) 
+	public void generateBasicEvidences (Measurement m) 
 			throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
 					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
-		setUpEvidences();
-		
-		for (Emotion e : EmotionManager.getEmotions()) {
+		for (String marker : Marker) {
 			
-			for (String marker : Marker) {
-				
+			for (Emotion e : EmotionManager.getEmotions()) {
+			
 				if( e.getAnyValue(marker) <= m.getAnyValue(marker) + Accuracy &&
 						e.getAnyValue(marker) >= m.getAnyValue(marker) - Accuracy) {
 					
-					Evidences.get(marker).add(e.Name);
+					BasicEvidences.get(marker).addEmotionname(e.Name);
 				}
 				
-				Evidences.get(marker + "Omega").add(e.Name);
+				BasicEvidences.get(marker + "Omega").addEmotionname(e.Name);
 			}
+			
+			BasicEvidences.get(marker).setWeight(m.getWeight(marker));
+			BasicEvidences.get(marker + "Omega").setWeight(1 - m.getWeight(marker));
 		}
 	} 
 	
-	public void setUpEvidences () {
+	public void setUpBasicEvidences () {
 	
 		//TODO: Abbrechen, wenn emotionenListe leer
-		Evidences.clear();
+		BasicEvidences.clear();
 		
 		for (String m : Marker) {
 			
-			Evidences.put(m, new HashSet<String>());
-			Evidences.put(m + "Omega", new HashSet<String>());
+			BasicEvidences.put(m, new Evidence(new HashSet<String>(), 0f));
+			BasicEvidences.put(m + "Omega", new Evidence(new HashSet<String>(), 0f));
 		}
 	}
 }

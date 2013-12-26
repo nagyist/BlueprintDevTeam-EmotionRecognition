@@ -8,23 +8,11 @@ import java.util.List;
 
 public class MeasurementManager {
 
-	private List<Measurement> measurements;
-	private float weightSpeed, weightPitch, weightIntensity;
+	private List<Measurement> Measurements;
 
 	public MeasurementManager () {
 		
-		measurements = new LinkedList<Measurement>();
-		weightSpeed = 0.8f;
-		weightPitch = 0.6f;
-		weightIntensity = 0.7f; 
-	}
-	
-	public MeasurementManager (float s, float p, float i) {
-		
-		measurements = new LinkedList<Measurement>();
-		weightSpeed = s;
-		weightPitch = p;
-		weightIntensity = i;
+		Measurements = new LinkedList<Measurement>();
 	}
 	
 	public void measurementReader(String filename) {
@@ -47,7 +35,7 @@ public class MeasurementManager {
 					//TODO: Throw a "Wrong CSV Format" Exception
 				}
 				
-				measurements.add(new Measurement(
+				Measurements.add(new Measurement(
 						Integer.parseInt(value[0]), 
 						Float.parseFloat(value[1].replaceAll(",", ".")),
 						wordToScale(value[2]), 
@@ -86,33 +74,21 @@ public class MeasurementManager {
 	
 	public void addMeasurement (Measurement m) {
 		
-		measurements.add(m);
+		Measurements.add(m);
 	}
 	
 	public void removeMeasurement (int id) {
 		
-		for (Measurement m : measurements) {
+		for (Measurement m : Measurements) {
 			
 			if (m.id == id) {
 				
-				measurements.remove(m);
+				Measurements.remove(m);
 			}
 		}
 	}
 	
 	public Measurement getMeasurement(int index) {
-		return measurements.get(index);
-	}
-	
-	public float getWeightSpeed() {
-		return weightSpeed;
-	}
-
-	public float getWeightPitch() {
-		return weightPitch;
-	}
-
-	public float getWeightIntensity() {
-		return weightIntensity;
+		return Measurements.get(index);
 	}
 }
