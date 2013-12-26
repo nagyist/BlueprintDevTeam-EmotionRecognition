@@ -28,49 +28,77 @@ public class EvidenceManager {
 			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
 					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
-		Set<Evidence> matrix = new HashSet<Evidence>();
+		float correction;
 		
 		resetEvidences();
 		generateBasicEvidences(m);
-	
-//		for (String ma : BasicEvidences.keySet()) {
-//		
-//			System.out.println(ma);
-//			
-//			System.out.println(BasicEvidences.get(ma).getEmotionnames());
-//			System.out.println(BasicEvidences.get(ma).getWeight());	
-//		}
 		
-		String[] s1 = {"Speed", "SpeedOmega"}, s2 = {"Pitch", "PitchOmega"};
-		matrix = combineEvidences(s1, s2);
-		
-		for (Evidence evidence : matrix) {
+		for (int i = 1; i < Marker.length; i++) {
 			
-			System.out.println(evidence.getEmotionnames() + "\t" + evidence.getWeight());
+			if (i == 1) {
+				
+				EvidenceMatrix.add(new Evidence(BasicEvidences.get(Marker[i-1]).getEmotionnames(), 
+						BasicEvidences.get(Marker[i-1]).getWeight()));
+				EvidenceMatrix.add(new Evidence(BasicEvidences.get(Marker[i-1] + "Omega").getEmotionnames(), 
+						BasicEvidences.get(Marker[i-1] + "Omega").getWeight()));
+			}
+			
+			String[] s = {Marker[i], Marker[i] + "Omega"};
+			EvidenceMatrix = combineEvidences(s, EvidenceMatrix);
 		}
 		
-		for (String marker : Marker) {
+//		for (Evidence evidence : EvidenceMatrix) {
+//			
+//			System.out.println(evidence.getEmotionnames() + "\t" + evidence.getWeight());
+//		}
+		
+		correction = calcCorrection();
+		System.out.println("Correction: " + correction);
+		for (Emotion e : EmotionManager.getEmotions()) {
 			
-			
+			System.out.println(e.Name + ": " + calcPlausibility(e.Name, correction));
 		}
 	}
 	
-	public Set<Evidence> combineEvidences (String[] e1, String[] e2) {
+	public float calcPlausibility (String en, float c) {
 		
-		Set<Evidence> col = new HashSet<Evidence>(), 
-					  row = new HashSet<Evidence>(),
+		float p = 0f;
+		
+		for (Evidence e : EvidenceMatrix) {
+			
+			if(e.getEmotionnames().contains(en)) p += e.getWeight();
+		}
+		
+		p = p * c;
+		
+		return p;
+	}
+	
+	public float calcCorrection () {
+		
+		float c = 0f;
+		
+		for (Evidence e : EvidenceMatrix) {
+			
+			if (e.getEmotionnames().isEmpty()) {
+				
+				c += e.getWeight();
+			}
+		}
+		
+		c = 1/(1-c);
+		
+		return c;
+	}
+	
+	public Set<Evidence> combineEvidences (String[] e1, Set<Evidence> row) {
+		
+		Set<Evidence> col = new HashSet<Evidence>(),
 					  ec = new HashSet<Evidence>();
 		
 		Set<String> intersection = new HashSet<String>();
 
 		for (String s : e1)	col.add(BasicEvidences.get(s));
-		for (String s : e2)	row.add(BasicEvidences.get(s));
-		
-		col.add(BasicEvidences.get(Marker[0]));
-		col.add(BasicEvidences.get(Marker[0] + "Omega"));
-		                                  
-		row.add(BasicEvidences.get(Marker[1]));
-		row.add(BasicEvidences.get(Marker[1] + "Omega"));
 		
 		for (Evidence c : col) {
 			
