@@ -20,7 +20,7 @@ public class EmotionRecognizer {
 		Measurement m = em.MeasurementManager.getMeasurement(1);
 		
 		try {
-			em.generateEvidenceMatrix(m);
+			em.dempsterShafer(m);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

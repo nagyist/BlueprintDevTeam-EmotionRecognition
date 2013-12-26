@@ -24,22 +24,65 @@ public class EvidenceManager {
 	}
 	
 	//TODO: Hinweis einfuegen "Achtung, dabei werden alle bisherigen Evid. geloescht! Fortfahren?"
-	public void generateEvidenceMatrix (Measurement m) 
+	public void dempsterShafer (Measurement m) 
 			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
 					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
-		setUpBasicEvidences();
-		generateBasicEvidences(m);
+		Set<Evidence> matrix = new HashSet<Evidence>();
 		
-		for (String ma : BasicEvidences.keySet()) {
+		resetEvidences();
+		generateBasicEvidences(m);
+	
+//		for (String ma : BasicEvidences.keySet()) {
+//		
+//			System.out.println(ma);
+//			
+//			System.out.println(BasicEvidences.get(ma).getEmotionnames());
+//			System.out.println(BasicEvidences.get(ma).getWeight());	
+//		}
+		
+		String[] s1 = {"Speed", "SpeedOmega"}, s2 = {"Pitch", "PitchOmega"};
+		matrix = combineEvidences(s1, s2);
+		
+		for (Evidence evidence : matrix) {
 			
-			System.out.println(ma);
-			
-			System.out.println(BasicEvidences.get(ma).getEmotionnames());
-			System.out.println(BasicEvidences.get(ma).getWeight());
-			
+			System.out.println(evidence.getEmotionnames() + "\t" + evidence.getWeight());
 		}
 		
+		for (String marker : Marker) {
+			
+			
+		}
+	}
+	
+	public Set<Evidence> combineEvidences (String[] e1, String[] e2) {
+		
+		Set<Evidence> col = new HashSet<Evidence>(), 
+					  row = new HashSet<Evidence>(),
+					  ec = new HashSet<Evidence>();
+		
+		Set<String> intersection = new HashSet<String>();
+
+		for (String s : e1)	col.add(BasicEvidences.get(s));
+		for (String s : e2)	row.add(BasicEvidences.get(s));
+		
+		col.add(BasicEvidences.get(Marker[0]));
+		col.add(BasicEvidences.get(Marker[0] + "Omega"));
+		                                  
+		row.add(BasicEvidences.get(Marker[1]));
+		row.add(BasicEvidences.get(Marker[1] + "Omega"));
+		
+		for (Evidence c : col) {
+			
+			for (Evidence r : row) {
+				
+				intersection = new HashSet<String>(c.getEmotionnames());
+				intersection.retainAll(r.getEmotionnames());
+				ec.add(new Evidence(intersection, c.getWeight() * r.getWeight()));
+			}
+		}
+		
+		return ec;
 	}
 	
 	public void generateBasicEvidences (Measurement m) 
@@ -64,7 +107,7 @@ public class EvidenceManager {
 		}
 	} 
 	
-	public void setUpBasicEvidences () {
+	public void resetEvidences () {
 	
 		//TODO: Abbrechen, wenn emotionenListe leer
 		BasicEvidences.clear();
