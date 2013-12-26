@@ -48,7 +48,7 @@ public class EvidenceManager {
 		}
 		
 //		for (Evidence evidence : EvidenceMatrix) {
-//			
+//			 
 //			System.out.println(evidence.getEmotionnames() + "\t" + evidence.getWeight());
 //		}
 		
