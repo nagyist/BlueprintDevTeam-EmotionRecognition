@@ -55,7 +55,7 @@ public class EvidenceManager {
 		correction = calcCorrection();
 		System.out.println("Correction: " + correction);
 		for (Emotion e : EmotionManager.getEmotions()) {
-			
+		
 			System.out.println(e.Name + ": " + calcPlausibility(e.Name, correction));
 		}
 	}
