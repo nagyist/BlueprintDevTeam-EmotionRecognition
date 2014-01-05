@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,47 +14,29 @@ public class MeasurementManager {
 		Measurements = new LinkedList<Measurement>();
 	}
 	
-	public void measurementReader(String filename) {
+	public void measurementReader(String filename) throws IOException {
 		
 		BufferedReader br = null;
 		
 		String line = "";
 		String[] value = null;
 		
-		try {
-			 
-			br = new BufferedReader(new FileReader(filename));
-			br.readLine();
+		br = new BufferedReader(new FileReader(filename));
+		br.readLine();
+		
+		while ((line = br.readLine()) != null) {
+ 
+			value = line.split(";");
 			
-			while ((line = br.readLine()) != null) {
-	 
-				value = line.split(";");
-				if (line.length() > 4) {
-					
-					//TODO: Throw a "Wrong CSV Format" Exception
-				}
-				
-				Measurements.add(new Measurement(
-						Integer.parseInt(value[0]), 
-						Float.parseFloat(value[1].replaceAll(",", ".")),
-						wordToScale(value[2]), 
-						wordToScale(value[3])
-				));
+			Measurements.add(new Measurement(
+					Integer.parseInt(value[0]), 
+					Float.parseFloat(value[1].replaceAll(",", ".")),
+					wordToScale(value[2]), 
+					wordToScale(value[3])
+			));
 			}
-	 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		
+		br.close();
 	}
 	
 	public int wordToScale (String w) {
@@ -89,6 +70,12 @@ public class MeasurementManager {
 	}
 	
 	public Measurement getMeasurement(int index) {
+		
 		return Measurements.get(index);
+	}
+	
+	public List<Measurement> getMeasurements () {
+		
+		return Measurements;
 	}
 }

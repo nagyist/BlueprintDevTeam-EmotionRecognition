@@ -1,6 +1,7 @@
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ public class EvidenceManager {
 	Set<Evidence> EvidenceMatrix;
 	int Accuracy;
 	String[] Marker;
+	float Correction;
 	
 	public EvidenceManager(int a) {
 	
@@ -21,14 +23,57 @@ public class EvidenceManager {
 		EvidenceMatrix = new HashSet<Evidence>();
 		Accuracy = a;
 		Marker = new Emotion("dummy", 0f, 0, 0).getMarkers();
+		Correction = 1.0f;
 	}
 	
-	//TODO: Hinweis einfuegen "Achtung, dabei werden alle bisherigen Evid. geloescht! Fortfahren?"
-	public void dempsterShafer (Measurement m) 
+	public void dempsterShaferDetailed (Measurement m) 
 			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
 					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
-		float correction;
+		dempsterShaferSetUp(m);
+		
+		System.out.println("correction: " + Correction);
+		for (Emotion e : EmotionManager.getEmotions()) {
+		
+			System.out.println(e.Name + ": " + calcPlausibility(e.Name, Correction));
+		}
+	}
+	
+	public void dempsterShaferForAll (List<Measurement> measurements) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+		
+		float p;
+		String emotionsForP, print;
+		
+		System.out.println("Frame-ID - Emotions - Plausibility");
+		
+		for (Measurement m : measurements) {
+			
+			dempsterShaferSetUp(m);
+			p = 0f;
+			emotionsForP = null;
+			print = null;
+			
+			for (Emotion e : EmotionManager.getEmotions()) {
+				
+				if (calcPlausibility(e.Name, Correction) > p) {
+					
+					p = calcPlausibility(e.Name, Correction);
+					emotionsForP = e.Name;
+				} else if (calcPlausibility(e.Name, Correction) == p) {
+				
+					emotionsForP += "," + e.Name;
+				}
+			}
+			
+			print = String.format(
+				"%2d %s %f", m.id, String.format("%-38s", emotionsForP).replace(" ", "."), p
+			);
+			
+			System.out.println(print);
+		}
+	}
+	
+	public void dempsterShaferSetUp (Measurement m) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
 		resetEvidences();
 		generateBasicEvidences(m);
@@ -47,17 +92,7 @@ public class EvidenceManager {
 			EvidenceMatrix = combineEvidences(s, EvidenceMatrix);
 		}
 		
-//		for (Evidence evidence : EvidenceMatrix) {
-//			 
-//			System.out.println(evidence.getEmotionnames() + "\t" + evidence.getWeight());
-//		}
-		
-		correction = calcCorrection();
-		System.out.println("Correction: " + correction);
-		for (Emotion e : EmotionManager.getEmotions()) {
-		
-			System.out.println(e.Name + ": " + calcPlausibility(e.Name, correction));
-		}
+		Correction = calcCorrection();
 	}
 	
 	public float calcPlausibility (String en, float c) {
@@ -139,6 +174,8 @@ public class EvidenceManager {
 	
 		//TODO: Abbrechen, wenn emotionenListe leer
 		BasicEvidences.clear();
+		EvidenceMatrix.clear();
+		Correction = 1.0f;
 		
 		for (String m : Marker) {
 			
