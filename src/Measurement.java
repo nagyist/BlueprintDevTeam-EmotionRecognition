@@ -1,11 +1,11 @@
 
 public class Measurement extends Marker{
 
-	public int id;
+	public int ID;
 
-	public Measurement (int b, float s, int p, int i) {
+	public Measurement (int id, float s, int p, int i) {
 
-		id = b;
+		ID = id;
 		Speed = s;
 		Pitch = p;
 		Intensity = i;

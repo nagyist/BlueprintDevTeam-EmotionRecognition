@@ -23,7 +23,7 @@ public abstract class Marker {
 		return w;
 	}
 	
-	public float getAnyValue(String marker) {
+	public float getAttributeValue(String marker) {
 		
 		float f = 0f;
 		

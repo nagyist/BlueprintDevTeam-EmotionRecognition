@@ -62,7 +62,7 @@ public class MeasurementManager {
 		
 		for (Measurement m : Measurements) {
 			
-			if (m.id == id) {
+			if (m.ID == id) {
 				
 				Measurements.remove(m);
 			}

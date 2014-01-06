@@ -7,13 +7,13 @@ import java.util.Set;
 
 public class EvidenceManager {
 
-	EmotionManager EmotionManager;
-	MeasurementManager MeasurementManager;
-	Map<String, Evidence> BasicEvidences;
-	Set<Evidence> EvidenceMatrix;
-	float Accuracy;
-	String[] Marker;
-	float Correction;
+	private EmotionManager EmotionManager;
+	private MeasurementManager MeasurementManager;
+	private Map<String, Evidence> BasicEvidences;
+	private Set<Evidence> EvidenceMatrix;
+	private float Accuracy;
+	private String[] Marker;
+	private float Correction;
 	
 	public EvidenceManager(int a) {
 	
@@ -26,26 +26,34 @@ public class EvidenceManager {
 		Correction = 1.0f;
 	}
 	
-	public void dempsterShaferDetailed (Measurement m) 
-			throws SecurityException, IllegalArgumentException, NoSuchMethodException, 
-					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public void dempsterShaferDetailed (Measurement m) throws 	SecurityException, 
+																IllegalArgumentException, 
+																NoSuchMethodException, 
+																IllegalAccessException, 
+																InvocationTargetException, 
+																NoSuchFieldException {
 		
 		dempsterShaferSetUp(m);
 		
 		System.out.println("correction: " + Correction);
-		for (Emotion e : EmotionManager.getEmotions()) {
+		for (Emotion e : getEmotionManager().getEmotions()) {
 		
 			System.out.println(e.getName() + ": " + calcPlausibility(e.getName(), Correction));
 		}
 	}
 	
-	public void dempsterShaferForAll (List<Measurement> measurements) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public void dempsterShaferForAll (List<Measurement> measurements) throws SecurityException, 
+																			IllegalArgumentException, 
+																			NoSuchMethodException, 
+																			IllegalAccessException, 
+																			InvocationTargetException, 
+																			NoSuchFieldException {
 		
 		float p;
 		String emotionsForP, print;
 		Map<String, Integer> occurences = new HashMap<String, Integer>();
 		
-		for (Emotion emotion : EmotionManager.getEmotions()) occurences.put(emotion.getName(), 0);
+		for (Emotion emotion : getEmotionManager().getEmotions()) occurences.put(emotion.getName(), 0);
 		
 		System.out.println("Frame-ID - Emotions - Plausibility");
 		
@@ -56,7 +64,7 @@ public class EvidenceManager {
 			emotionsForP = null;
 			print = null;
 			
-			for (Emotion e : EmotionManager.getEmotions()) {
+			for (Emotion e : getEmotionManager().getEmotions()) {
 				
 				if (calcPlausibility(e.getName(), Correction) > p) {
 					
@@ -69,7 +77,7 @@ public class EvidenceManager {
 			}
 			
 			print = String.format(
-				"%2d %s %f", m.id, String.format("%-38s", emotionsForP).replace(" ", "."), p
+				"%2d %s %f", m.ID, String.format("%-38s", emotionsForP).replace(" ", "."), p
 			);
 			
 			for (String emotionname : emotionsForP.split(",")) {
@@ -82,7 +90,7 @@ public class EvidenceManager {
 		
 		System.out.println("\nStatistics:");
 		
-		for (Emotion emotion : EmotionManager.getEmotions()) {
+		for (Emotion emotion : getEmotionManager().getEmotions()) {
 			
 			System.out.println(String.format("%-7s %2d (%3.0f%%)", emotion.getName(), 
 					occurences.get(emotion.getName()), 
@@ -90,7 +98,12 @@ public class EvidenceManager {
 		}
 	}
 	
-	public void dempsterShaferSetUp (Measurement m) throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public void dempsterShaferSetUp (Measurement m) throws	SecurityException, 
+															IllegalArgumentException, 
+															NoSuchMethodException, 
+															IllegalAccessException, 
+															InvocationTargetException, 
+															NoSuchFieldException {
 		
 		resetEvidences();
 		generateBasicEvidences(m);
@@ -165,16 +178,19 @@ public class EvidenceManager {
 		return ec;
 	}
 	
-	public void generateBasicEvidences (Measurement m) 
-			throws SecurityException, NoSuchMethodException, IllegalArgumentException, 
-					IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public void generateBasicEvidences (Measurement m) throws	SecurityException, 
+																NoSuchMethodException, 
+																IllegalArgumentException, 
+																IllegalAccessException, 
+																InvocationTargetException, 
+																NoSuchFieldException {
 		
 		for (String marker : Marker) {
 			
-			for (Emotion e : EmotionManager.getEmotions()) {
+			for (Emotion e : getEmotionManager().getEmotions()) {
 			
-				if( e.getAnyValue(marker) <= m.getAnyValue(marker) + Accuracy &&
-						e.getAnyValue(marker) >= m.getAnyValue(marker) - Accuracy) {
+				if( e.getAttributeValue(marker) <= m.getAttributeValue(marker) + Accuracy &&
+						e.getAttributeValue(marker) >= m.getAttributeValue(marker) - Accuracy) {
 					
 					BasicEvidences.get(marker).addEmotionname(e.getName());
 				}
@@ -189,7 +205,6 @@ public class EvidenceManager {
 	
 	public void resetEvidences () {
 	
-		//TODO: Abbrechen, wenn emotionenListe leer
 		BasicEvidences.clear();
 		EvidenceMatrix.clear();
 		Correction = 1.0f;
@@ -210,5 +225,13 @@ public class EvidenceManager {
 		
 		if (acc > 3 || acc < 0)	throw new IllegalArgumentException();
 		else					Accuracy = acc;
+	}
+
+	public MeasurementManager getMeasurementManager() {
+		return MeasurementManager;
+	}
+
+	public EmotionManager getEmotionManager() {
+		return EmotionManager;
 	}
 }

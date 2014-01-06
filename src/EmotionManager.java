@@ -4,40 +4,40 @@ import java.util.List;
 
 public class EmotionManager {
 
-	private List<Emotion> emotions;
+	private List<Emotion> Emotions;
 
 	public EmotionManager() {
 	
-		emotions = new LinkedList<Emotion>();
+		Emotions = new LinkedList<Emotion>();
 	}
 	
 	public void loadDefault() {
 		
-		emotions.add(new Emotion("fear",	5.5f, 3, 3));
-		emotions.add(new Emotion("suprise", 5.5f, 3, 5));
-		emotions.add(new Emotion("anger",	5.5f, 3, 5));
-		emotions.add(new Emotion("joy",		5.5f, 5, 5));
-		emotions.add(new Emotion("disgust",	2.9f, 3, 1));
-		emotions.add(new Emotion("sadness",	4.1f, 1, 1));
+		Emotions.add(new Emotion("fear",	5.5f, 3, 3));
+		Emotions.add(new Emotion("suprise", 5.5f, 3, 5));
+		Emotions.add(new Emotion("anger",	5.5f, 3, 5));
+		Emotions.add(new Emotion("joy",		5.5f, 5, 5));
+		Emotions.add(new Emotion("disgust",	2.9f, 3, 1));
+		Emotions.add(new Emotion("sadness",	4.1f, 1, 1));
 	}
 	
 	public void addEmotion (Emotion e) {
 		
-		emotions.add(e);
+		Emotions.add(e);
 	}
 	
 	public void removeEmotion (String n) {
 		
-		for (Emotion e : emotions) {
+		for (Emotion e : Emotions) {
 			
 			if(e.getName() == n) {
 				
-				emotions.remove(e);
+				Emotions.remove(e);
 			}
 		}
 	}
 	
 	public List<Emotion> getEmotions() {
-		return emotions;
+		return Emotions;
 	}
 }

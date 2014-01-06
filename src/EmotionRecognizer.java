@@ -19,10 +19,10 @@ public class EmotionRecognizer {
 													InvocationTargetException {
 		
 		EvidenceManager em = new EvidenceManager(1);
-		em.EmotionManager.loadDefault();
+		em.getEmotionManager().loadDefault();
 		
 		// TODO: Folgende Zeile NUR fuer debugging! 
-		em.MeasurementManager.measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
+		em.getMeasurementManager().measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
 		
 		menu(em);
 	}
@@ -43,7 +43,8 @@ public class EmotionRecognizer {
 			System.out.println(" ------------------------------------------------------");
 			System.out.println("| Menu:                                                |");
 			System.out.println("| (1) Load CSV                                         |");
-			System.out.println("| (2) Set Tolerance (Current: " + String.format("%1.1f", em.Accuracy) 
+			System.out.println("| (2) Set Tolerance (Current: "
+									+ String.format("%1.1f", em.getAccuracy()) 
 															  + ")                     |");
 			System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
 			System.out.println("| (4) Emotion Recognition for all Measurements         |");
@@ -58,7 +59,7 @@ public class EmotionRecognizer {
 				else if (input.equals("3")) { erDetailed(em);	break; }
 				else if (input.equals("4")) { 
 					
-					em.dempsterShaferForAll(em.MeasurementManager.getMeasurements());
+					em.dempsterShaferForAll(em.getMeasurementManager().getMeasurements());
 					break; 
 				}
 				else {
@@ -92,7 +93,7 @@ public class EmotionRecognizer {
 			try {
 				
 				if (input.equals("a")) return;
-				em.MeasurementManager.measurementReader(input);
+				em.getMeasurementManager().measurementReader(input);
 				break;
 			} catch (FileNotFoundException e) {
 				
@@ -139,7 +140,7 @@ public class EmotionRecognizer {
 		String input = ""; 
 		int index = 0;
 		
-		if (em.MeasurementManager.getMeasurements().isEmpty()) {
+		if (em.getMeasurementManager().getMeasurements().isEmpty()) {
 			
 			System.out.println("\nYou have no measurements. Please load a CSV with your measurements."
 					+ "\nIf you have done this already your file might have the wrong format."
@@ -160,7 +161,7 @@ public class EmotionRecognizer {
 
 				if (input.equals("a")) return;
 				index = Integer.parseInt(input);
-				Measurement m = em.MeasurementManager.getMeasurement(index);
+				Measurement m = em.getMeasurementManager().getMeasurement(index);
 				em.dempsterShaferDetailed(m);
 				break;
 			} catch (Exception e) {
