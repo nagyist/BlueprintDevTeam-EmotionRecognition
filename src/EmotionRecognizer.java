@@ -19,145 +19,155 @@ public class EmotionRecognizer {
 													InvocationTargetException {
 		
 		EvidenceManager em = new EvidenceManager(1);
-
 		em.EmotionManager.loadDefault();
 		
-		// TODO: Folgende Zeile nur fuer debugging! 
+		// TODO: Folgende Zeile NUR fuer debugging! 
 		em.MeasurementManager.measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
 		
 		menu(em);
 	}
 	
-	public static void menu(EvidenceManager em) throws IOException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public static void menu(EvidenceManager em) throws	IOException, SecurityException, 
+														IllegalArgumentException, 
+														NoSuchMethodException, 
+														IllegalAccessException, 
+														InvocationTargetException, 
+														NoSuchFieldException {
 		
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 		String input = null;
 		
-		System.out.println(" ------------------------------------------------------");
-		System.out.println("| Menu:                                                |");
-		System.out.println("| (1) Load CSV                                         |");
-		System.out.println("| (2) Set Tolerance (Current: " + String.format("%1.1f", em.Accuracy) 
-														  + ")                     |");
-		System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
-		System.out.println("| (4) Emotion Recognition for all Measurements         |");
-		System.out.println(" ------------------------------------------------------");
-		input = console.readLine();
 		
-		while (!input.equals("1") && !input.equals("2") && !input.equals("3") && !input.equals("4")) {
+		while(true) {
 			
-			System.out.println("Please type the number of the action you want ... ");
+			System.out.println(" ------------------------------------------------------");
+			System.out.println("| Menu:                                                |");
+			System.out.println("| (1) Load CSV                                         |");
+			System.out.println("| (2) Set Tolerance (Current: " + String.format("%1.1f", em.Accuracy) 
+															  + ")                     |");
+			System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
+			System.out.println("| (4) Emotion Recognition for all Measurements         |");
+			System.out.println(" ------------------------------------------------------");
+			
 			input = console.readLine();
+			
+			while (true) {
+				
+				if		(input.equals("1")) { loadCSV(em);		break; }
+				else if	(input.equals("2")) { changeAcc(em);	break; }
+				else if (input.equals("3")) { erDetailed(em);	break; }
+				else if (input.equals("4")) { 
+					
+					em.dempsterShaferForAll(em.MeasurementManager.getMeasurements());
+					break; 
+				}
+				else {
+					
+					System.out.println("Please type the number of the action you want!");
+					input = console.readLine();
+				}
+			}
+			
+			System.out.println();
 		}
-		
-		if(input.equals("1")) loadCSV(em);
-		else if(input.equals("2")) changeAcc(em);
-		else if(input.equals("3")) erDetailed(em);
-		else if(input.equals("4")) erAll(em);
 	}
 	
-	public static void loadCSV (EvidenceManager em) throws IOException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public static void loadCSV (EvidenceManager em) throws 	IOException, SecurityException, 
+															IllegalArgumentException, 
+															NoSuchMethodException, 
+															IllegalAccessException, 
+															InvocationTargetException, 
+															NoSuchFieldException {
 		
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = null;
+		String input = "";
 		
-		System.out.println("\nLoad CSV");
-		System.out.println("INFO: This will replace the previous CSV");
+		System.out.println("\nINFO: This will not add measurements, but replace the previous CSV");
 		System.out.print("Enter Path or (a) to abort: ");
-		input = console.readLine();
 		
-		if (input.equals("a")) {
+		while (true) {
 			
-			System.out.println("\n");
-			menu(em);
-		} else {
+			input = console.readLine();
 			
 			try {
-			
+				
+				if (input.equals("a")) return;
 				em.MeasurementManager.measurementReader(input);
+				break;
 			} catch (FileNotFoundException e) {
 				
-				System.out.println("****** ERROR: Cannot find this file! ******");
-				loadCSV(em);
-			}
+				System.out.println("Cannot find this file, please enter a correct path!");
+			}	
 		}
-
+		
+		System.out.println("Successfully Loaded.");
 	}
 
 	public static void changeAcc (EvidenceManager em) throws SecurityException, IllegalArgumentException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 		
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input;
+		String input ="";
 		float acc = 0;
 		
-		System.out.println("Enter tolerance value or (a) to abort: ");
+		System.out.println("\nEnter tolerance value or (a) to abort: ");
 		
-		try {
-		
+		while (true) {
+			
 			input = console.readLine();
 			
-			if (input.equals("a"))	menu(em);
-			else 					acc = Float.parseFloat(input);
-		} catch (NumberFormatException e) {
-			System.out.println("You have to enter a number!");
-			changeAcc(em);
-		}
-		if (acc > 2 || acc < 0) {
-			
-			System.out.println("Please enter a valid tolerance value between 0 and 2!");
-			changeAcc(em);
-		} else {
-		
-			em.setAccuracy(acc);
-			menu(em);
+			try {
+
+				if (input.equals("a")) return;
+				acc = Float.parseFloat(input);
+				em.setAccuracy(acc);
+				break;
+			} catch (Exception e) {
+				
+				System.out.println("You have to enter a valid number between 0 and 3!");
+			}
 		}
 	}
 	
-	public static void erDetailed (EvidenceManager em) throws IOException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public static void erDetailed (EvidenceManager em) throws	IOException, SecurityException, 
+																IllegalArgumentException, 
+																NoSuchMethodException, 
+																IllegalAccessException, 
+																InvocationTargetException, 
+																NoSuchFieldException {
 				
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = null; 
+		String input = ""; 
 		int index = 0;
 		
 		if (em.MeasurementManager.getMeasurements().isEmpty()) {
 			
-			System.out.println("You have no measurements. Please load a CSV with your measurements."
+			System.out.println("\nYou have no measurements. Please load a CSV with your measurements."
 					+ "\nIf you have done this already your file might have the wrong format."
 					+ "\nIn this case please read the documentation to see what format is needed.");
 			
 			loadCSV(em);
+			erDetailed(em);
+			return;
 		}
 		
-		System.out.println("Enter frame number or (a) to abort: ");
-		try {
+		System.out.println("\nEnter frame number or (a) to abort: ");
 		
+		while (true) {
+			
 			input = console.readLine();
 			
-			if (input.equals("a"))	menu(em);
-			else 					index = Integer.parseInt(input);
-		} catch (NumberFormatException e) {
-			System.out.println("You have to enter a number!");
-			erDetailed(em);
+			try {
+
+				if (input.equals("a")) return;
+				index = Integer.parseInt(input);
+				Measurement m = em.MeasurementManager.getMeasurement(index);
+				em.dempsterShaferDetailed(m);
+				break;
+			} catch (Exception e) {
+				
+				System.out.println("You don't have a frame with the ID #" + index + " in your data, "
+						+ "please enter a valid frame number!");
+			}
 		}
-		
-		try {
-			
-			Measurement m = em.MeasurementManager.getMeasurement(index);
-			em.dempsterShaferDetailed(m);
-		} catch (Exception e) {
-			
-			System.out.println("You don't have frame #" + index + " in your data!");
-			erDetailed(em);
-		}
-		
-		System.out.println("\n");
-		menu(em);
-	}
-	
-	public static void erAll (EvidenceManager em) throws SecurityException, IllegalArgumentException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
-		
-		em.dempsterShaferForAll(em.MeasurementManager.getMeasurements());
-		
-		System.out.println("\n");
-		menu(em);
 	}
 }

@@ -208,6 +208,7 @@ public class EvidenceManager {
 	
 	public void setAccuracy (float acc) {
 		
-		Accuracy = acc;
+		if (acc > 3 || acc < 0)	throw new IllegalArgumentException();
+		else					Accuracy = acc;
 	}
 }
