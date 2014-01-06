@@ -43,6 +43,9 @@ public class EvidenceManager {
 		
 		float p;
 		String emotionsForP, print;
+		Map<String, Integer> occurences = new HashMap<String, Integer>();
+		
+		for (Emotion emotion : EmotionManager.getEmotions()) occurences.put(emotion.Name, 0);
 		
 		System.out.println("Frame-ID - Emotions - Plausibility");
 		
@@ -69,7 +72,21 @@ public class EvidenceManager {
 				"%2d %s %f", m.id, String.format("%-38s", emotionsForP).replace(" ", "."), p
 			);
 			
+			for (String emotionname : emotionsForP.split(",")) {
+				
+				occurences.put(emotionname, occurences.get(emotionname) + 1);
+			}
+			
 			System.out.println(print);
+		}
+		
+		System.out.println("\nStatistics:");
+		
+		for (Emotion emotion : EmotionManager.getEmotions()) {
+			
+			System.out.println(String.format("%-7s %2d (%3.0f%%)", emotion.Name, 
+					occurences.get(emotion.Name), 
+					((float) occurences.get(emotion.Name)/ (float) measurements.size())*100));
 		}
 	}
 	
@@ -182,5 +199,15 @@ public class EvidenceManager {
 			BasicEvidences.put(m, new Evidence(new HashSet<String>(), 0f));
 			BasicEvidences.put(m + "Omega", new Evidence(new HashSet<String>(), 0f));
 		}
+	}
+	
+	public int getAccuracy () {
+		
+		return Accuracy;
+	}
+	
+	public void setAccuracy (int i) {
+		
+		Accuracy = i;
 	}
 }

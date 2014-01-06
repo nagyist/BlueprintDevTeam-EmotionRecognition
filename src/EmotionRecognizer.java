@@ -36,8 +36,10 @@ public class EmotionRecognizer {
 		System.out.println(" ------------------------------------------------------");
 		System.out.println("| Menu:                                                |");
 		System.out.println("| (1) Load CSV                                         |");
-		System.out.println("| (2) Emotion Recognition with Details (for one frame) |");
-		System.out.println("| (3) Emotion Recognition for all Measurements         |");
+		System.out.println("| (2) Set Tolerance (Current: " + em.getAccuracy() 
+													    + ")                       |");
+		System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
+		System.out.println("| (4) Emotion Recognition for all Measurements         |");
 		System.out.println(" ------------------------------------------------------");
 		input = console.readLine();
 		
@@ -48,8 +50,9 @@ public class EmotionRecognizer {
 		}
 		
 		if(input.equals("1")) loadCSV(em);
-		if(input.equals("2")) erDetailed(em);
-		if(input.equals("3")) erAll(em);
+		else if(input.equals("2")) changeAcc(em);
+		else if(input.equals("3")) erDetailed(em);
+		else if(input.equals("4")) erAll(em);
 	}
 	
 	public static void loadCSV (EvidenceManager em) throws IOException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
@@ -80,9 +83,39 @@ public class EmotionRecognizer {
 
 	}
 
+	public static void changeAcc (EvidenceManager em) throws SecurityException, IllegalArgumentException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+		
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		String input;
+		int acc = 0;
+		
+		System.out.println("Enter tolerance value or (a) to abort: ");
+		
+		try {
+		
+			input = console.readLine();
+			
+			if (input.equals("a"))	menu(em);
+			else 					acc = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			System.out.println("You have to enter a number!");
+			erDetailed(em);
+		}
+		if (acc > 2 || acc < 0) {
+			
+			System.out.println("Please enter a valid tolerance value (0, 1 or 2)!");
+			changeAcc(em);
+		} else {
+		
+			em.setAccuracy(acc);
+			menu(em);
+		}
+	}
+	
 	public static void erDetailed (EvidenceManager em) throws IOException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
 				
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		String input = null; 
 		int index = 0;
 		
 		if (em.MeasurementManager.getMeasurements().isEmpty()) {
@@ -95,7 +128,16 @@ public class EmotionRecognizer {
 		}
 		
 		System.out.println("Enter frame number or (a) to abort: ");
-		index = Integer.parseInt(console.readLine());
+		try {
+		
+			input = console.readLine();
+			
+			if (input.equals("a"))	menu(em);
+			else 					index = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			System.out.println("You have to enter a number!");
+			erDetailed(em);
+		}
 		
 		try {
 			
