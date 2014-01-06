@@ -19,7 +19,6 @@ public class EmotionManager {
 		emotions.add(new Emotion("joy",		5.5f, 5, 5));
 		emotions.add(new Emotion("disgust",	2.9f, 3, 1));
 		emotions.add(new Emotion("sadness",	4.1f, 1, 1));
-
 	}
 	
 	public void addEmotion (Emotion e) {
@@ -31,7 +30,7 @@ public class EmotionManager {
 		
 		for (Emotion e : emotions) {
 			
-			if(e.Name == n) {
+			if(e.getName() == n) {
 				
 				emotions.remove(e);
 			}

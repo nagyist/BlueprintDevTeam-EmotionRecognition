@@ -36,8 +36,8 @@ public class EmotionRecognizer {
 		System.out.println(" ------------------------------------------------------");
 		System.out.println("| Menu:                                                |");
 		System.out.println("| (1) Load CSV                                         |");
-		System.out.println("| (2) Set Tolerance (Current: " + em.getAccuracy() 
-													    + ")                       |");
+		System.out.println("| (2) Set Tolerance (Current: " + String.format("%1.1f", em.Accuracy) 
+														  + ")                     |");
 		System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
 		System.out.println("| (4) Emotion Recognition for all Measurements         |");
 		System.out.println(" ------------------------------------------------------");
@@ -87,7 +87,7 @@ public class EmotionRecognizer {
 		
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 		String input;
-		int acc = 0;
+		float acc = 0;
 		
 		System.out.println("Enter tolerance value or (a) to abort: ");
 		
@@ -96,14 +96,14 @@ public class EmotionRecognizer {
 			input = console.readLine();
 			
 			if (input.equals("a"))	menu(em);
-			else 					acc = Integer.parseInt(input);
+			else 					acc = Float.parseFloat(input);
 		} catch (NumberFormatException e) {
 			System.out.println("You have to enter a number!");
-			erDetailed(em);
+			changeAcc(em);
 		}
 		if (acc > 2 || acc < 0) {
 			
-			System.out.println("Please enter a valid tolerance value (0, 1 or 2)!");
+			System.out.println("Please enter a valid tolerance value between 0 and 2!");
 			changeAcc(em);
 		} else {
 		

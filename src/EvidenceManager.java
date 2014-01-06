@@ -11,7 +11,7 @@ public class EvidenceManager {
 	MeasurementManager MeasurementManager;
 	Map<String, Evidence> BasicEvidences;
 	Set<Evidence> EvidenceMatrix;
-	int Accuracy;
+	float Accuracy;
 	String[] Marker;
 	float Correction;
 	
@@ -35,7 +35,7 @@ public class EvidenceManager {
 		System.out.println("correction: " + Correction);
 		for (Emotion e : EmotionManager.getEmotions()) {
 		
-			System.out.println(e.Name + ": " + calcPlausibility(e.Name, Correction));
+			System.out.println(e.getName() + ": " + calcPlausibility(e.getName(), Correction));
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class EvidenceManager {
 		String emotionsForP, print;
 		Map<String, Integer> occurences = new HashMap<String, Integer>();
 		
-		for (Emotion emotion : EmotionManager.getEmotions()) occurences.put(emotion.Name, 0);
+		for (Emotion emotion : EmotionManager.getEmotions()) occurences.put(emotion.getName(), 0);
 		
 		System.out.println("Frame-ID - Emotions - Plausibility");
 		
@@ -58,13 +58,13 @@ public class EvidenceManager {
 			
 			for (Emotion e : EmotionManager.getEmotions()) {
 				
-				if (calcPlausibility(e.Name, Correction) > p) {
+				if (calcPlausibility(e.getName(), Correction) > p) {
 					
-					p = calcPlausibility(e.Name, Correction);
-					emotionsForP = e.Name;
-				} else if (calcPlausibility(e.Name, Correction) == p) {
+					p = calcPlausibility(e.getName(), Correction);
+					emotionsForP = e.getName();
+				} else if (calcPlausibility(e.getName(), Correction) == p) {
 				
-					emotionsForP += "," + e.Name;
+					emotionsForP += "," + e.getName();
 				}
 			}
 			
@@ -84,9 +84,9 @@ public class EvidenceManager {
 		
 		for (Emotion emotion : EmotionManager.getEmotions()) {
 			
-			System.out.println(String.format("%-7s %2d (%3.0f%%)", emotion.Name, 
-					occurences.get(emotion.Name), 
-					((float) occurences.get(emotion.Name)/ (float) measurements.size())*100));
+			System.out.println(String.format("%-7s %2d (%3.0f%%)", emotion.getName(), 
+					occurences.get(emotion.getName()), 
+					((float) occurences.get(emotion.getName())/ (float) measurements.size())*100));
 		}
 	}
 	
@@ -176,10 +176,10 @@ public class EvidenceManager {
 				if( e.getAnyValue(marker) <= m.getAnyValue(marker) + Accuracy &&
 						e.getAnyValue(marker) >= m.getAnyValue(marker) - Accuracy) {
 					
-					BasicEvidences.get(marker).addEmotionname(e.Name);
+					BasicEvidences.get(marker).addEmotionname(e.getName());
 				}
 				
-				BasicEvidences.get(marker + "Omega").addEmotionname(e.Name);
+				BasicEvidences.get(marker + "Omega").addEmotionname(e.getName());
 			}
 			
 			BasicEvidences.get(marker).setWeight(m.getWeight(marker));
@@ -201,13 +201,13 @@ public class EvidenceManager {
 		}
 	}
 	
-	public int getAccuracy () {
+	public float getAccuracy () {
 		
 		return Accuracy;
 	}
 	
-	public void setAccuracy (int i) {
+	public void setAccuracy (float acc) {
 		
-		Accuracy = i;
+		Accuracy = acc;
 	}
 }
