@@ -98,6 +98,28 @@ public class EvidenceManager {
 		}
 	}
 	
+	public void dempsterShaferProveEmotion (List<Measurement> measurements, String name) 
+																	throws	SecurityException, 
+																			IllegalArgumentException, 
+																			NoSuchMethodException, 
+																			IllegalAccessException, 
+																			InvocationTargetException, 
+																			NoSuchFieldException {
+		
+		if (!EmotionManager.containsEmotion(name)) throw new IllegalArgumentException();
+		
+		float p;
+		
+		System.out.println("Plausibility for " + name + " per frame:");
+		
+		for (Measurement m : measurements) {
+			
+			dempsterShaferSetUp(m);
+			p = calcPlausibility(name, Correction);
+			System.out.println(String.format("%2d...%1.4f", m.ID, p));
+		}
+	}
+	
 	public void dempsterShaferSetUp (Measurement m) throws	SecurityException, 
 															IllegalArgumentException, 
 															NoSuchMethodException, 

@@ -12,19 +12,21 @@ public class EmotionRecognizer {
 	 * Was public, was private, was ... ???
 	 * Konventionen (Gro§-/Kleinschreibung)
 	 * richtige Verwendung von Frame/Takt/Beat,...
+	 * unnštige Exceptions entfernen
 	 */
 	public static void main(String[] args) throws	IOException, NoSuchFieldException, 
 													SecurityException, IllegalArgumentException, 
 													NoSuchMethodException, IllegalAccessException, 
 													InvocationTargetException {
 		
-		EvidenceManager em = new EvidenceManager(1);
-		em.getEmotionManager().loadDefault();
+		EvidenceManager EM = new EvidenceManager(1);
+		
+		EM.getEmotionManager().loadDefault();
 		
 		// TODO: Folgende Zeile NUR fuer debugging! 
-		em.getMeasurementManager().measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
+		EM.getMeasurementManager().measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
 		
-		menu(em);
+		menu(EM);
 	}
 	
 	public static void menu(EvidenceManager em) throws	IOException, SecurityException, 
@@ -48,6 +50,7 @@ public class EmotionRecognizer {
 															  + ")                     |");
 			System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
 			System.out.println("| (4) Emotion Recognition for all Measurements         |");
+			System.out.println("| (5) Prove Plausibility for a Single Emotion          |");
 			System.out.println(" ------------------------------------------------------");
 			
 			input = console.readLine();
@@ -62,6 +65,7 @@ public class EmotionRecognizer {
 					em.dempsterShaferForAll(em.getMeasurementManager().getMeasurements());
 					break; 
 				}
+				else if (input.equals("5")) { proveEmotion(em);	break; }
 				else {
 					
 					System.out.println("Please type the number of the action you want!");
@@ -168,6 +172,34 @@ public class EmotionRecognizer {
 				
 				System.out.println("You don't have a frame with the ID #" + index + " in your data, "
 						+ "please enter a valid frame number!");
+			}
+		}
+	}
+	
+	public static void proveEmotion (EvidenceManager em) throws IOException {
+		
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		String input = "";
+		
+		System.out.println("\nEnter the name of the emotion you want to prove or (a) to abort: ");
+		
+		while (true) {
+			
+			input = console.readLine();
+			
+			try {
+
+				if (input.equals("a")) return;
+				em.dempsterShaferProveEmotion(em.getMeasurementManager().getMeasurements(), input);
+				break;
+			} catch (Exception e) {
+				
+				System.out.println("You have to enter one of the following emotions:");
+				for (Emotion emotion : em.getEmotionManager().getEmotions()) {
+				
+					System.out.print(emotion.getName() + " ");
+				}
+				System.out.println();
 			}
 		}
 	}

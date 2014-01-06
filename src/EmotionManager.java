@@ -21,6 +21,16 @@ public class EmotionManager {
 		Emotions.add(new Emotion("sadness",	4.1f, 1, 1));
 	}
 	
+	public boolean containsEmotion (String name) {
+		
+		for (Emotion e : Emotions) {
+			
+			if (e.getName().equals(name)) return true;
+		}
+		
+		return false;
+	}
+	
 	public void addEmotion (Emotion e) {
 		
 		Emotions.add(e);
