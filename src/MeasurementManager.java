@@ -21,36 +21,36 @@ public class MeasurementManager {
 		String line = "";
 		String[] value = null;
 		
+		Measurements.clear();
+		
 		br = new BufferedReader(new FileReader(filename));
 		br.readLine();
 		
 		while ((line = br.readLine()) != null) {
  
 			value = line.split(";");
-			
+				
 			Measurements.add(new Measurement(
-					Integer.parseInt(value[0]), 
-					Float.parseFloat(value[1].replaceAll(",", ".")),
-					wordToScale(value[2]), 
-					wordToScale(value[3])
+		
+				Integer.parseInt(value[0]), 
+				Float.parseFloat(value[1].replaceAll(",", ".")),
+				wordToScale(value[2]), 
+				wordToScale(value[3])
 			));
-			}
+			
+		}
 		
 		br.close();
 	}
 	
 	public int wordToScale (String w) {
 		
-		int r = 0;
-		
-		if (w.equals("sehr niedrig"))	r = 1;
-		if (w.equals("niedrig"))		r = 2;
-		if (w.equals("normal"))			r = 3;
-		if (w.equals("hoch"))			r = 4;
-		if (w.equals("sehr hoch"))		r = 5;
-
-		return r;
-			
+		if (w.equalsIgnoreCase("sehr niedrig")	|| w.equalsIgnoreCase("very low"))	return 1;
+		if (w.equalsIgnoreCase("niedrig") 		|| w.equalsIgnoreCase("low"))		return 2;
+		if (w.equalsIgnoreCase("normal"))											return 3;
+		if (w.equalsIgnoreCase("hoch") 			|| w.equalsIgnoreCase("high"))		return 4;
+		if (w.equalsIgnoreCase("sehr hoch") 	|| w.equalsIgnoreCase("very high"))	return 5;
+		else throw new IllegalArgumentException();
 	}
 	
 	public void addMeasurement (Measurement m) {

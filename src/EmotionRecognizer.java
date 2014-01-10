@@ -1,11 +1,14 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
+import com.sun.tools.internal.ws.wscompile.AbortException;
 
 public class EmotionRecognizer {
 
+	private static EvidenceManager EM = new EvidenceManager(1);
+	private static BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+	private static String input ="";
+	
 	/* TODO Finale Checks:
 	 * Kommentare entfernen
 	 * Einheitliche Bezeichner (z.B. e ist immer Emotionion und nicht mal Emotion und mal Emotionen-Liste)
@@ -14,62 +17,62 @@ public class EmotionRecognizer {
 	 * richtige Verwendung von Frame/Takt/Beat,...
 	 * unnštige Exceptions entfernen
 	 */
-	public static void main(String[] args) throws	IOException, NoSuchFieldException, 
-													SecurityException, IllegalArgumentException, 
-													NoSuchMethodException, IllegalAccessException, 
-													InvocationTargetException {
+	public static void main(String[] args) {
 		
-		EvidenceManager EM = new EvidenceManager(1);
+		
 		
 		EM.getEmotionManager().loadDefault();
 		
-		// TODO: Folgende Zeile NUR fuer debugging! 
-		EM.getMeasurementManager().measurementReader("/Users/sophie/Projekte/eese/dempster/EmotionRecognition/E_020/E_020.csv");
+		//TODO: Folgende Zeile NUR fuer debugging! 
+		try {EM.getMeasurementManager().measurementReader("../EmotionRecognition/E_020/E_020.csv");} catch (IOException e) {}
 		
-		menu(EM);
+		menu();
 	}
 	
-	public static void menu(EvidenceManager em) throws	IOException, SecurityException, 
-														IllegalArgumentException, 
-														NoSuchMethodException, 
-														IllegalAccessException, 
-														InvocationTargetException, 
-														NoSuchFieldException {
+	public static void menu() {
 		
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = null;
-		
+		String tmp_input;
 		
 		while(true) {
 			
-			System.out.println(" ------------------------------------------------------");
-			System.out.println("| Menu:                                                |");
-			System.out.println("| (1) Load CSV                                         |");
+			System.out.println(" -------------------------------------------------------------------");
+			System.out.println("| Menu:                                                             |");
+			System.out.println("| (1) Load CSV                                                      |");
 			System.out.println("| (2) Set Tolerance (Current: "
-									+ String.format("%1.1f", em.getAccuracy()) 
-															  + ")                     |");
-			System.out.println("| (3) Emotion Recognition with Details (for one frame) |");
-			System.out.println("| (4) Emotion Recognition for all Measurements         |");
-			System.out.println("| (5) Prove Plausibility for a Single Emotion          |");
-			System.out.println(" ------------------------------------------------------");
+									+ String.format("%1.1f", EM.getAccuracy()) 
+															  + ")                                  |");
+			System.out.println("| (3) Emotion Recognition for one Frame (with Details)              |");
+			System.out.println("| (4) Emotion Recognition for all Frames                            |");
+			System.out.println("| (5) Prove Plausibility for a Single Emotion                       |");
+			System.out.println("|                                                                   |");
+			System.out.println("| INFO: (a) will abort all submenus and bring you back to this one. |");
+			System.out.println(" -------------------------------------------------------------------");
 			
-			input = console.readLine();
+			readLine();
 			
 			while (true) {
 				
-				if		(input.equals("1")) { loadCSV(em);		break; }
-				else if	(input.equals("2")) { changeAcc(em);	break; }
-				else if (input.equals("3")) { erDetailed(em);	break; }
-				else if (input.equals("4")) { 
+				if		(input.equals("1")) { loadCSV();   break; } 
+				else if	(input.equals("2")) { changeAcc(); break; }
+				
+				else if (input.equals("3") || input.equals("4") || input.equals("5")) {
 					
-					em.dempsterShaferForAll(em.getMeasurementManager().getMeasurements());
-					break; 
+					tmp_input = input;
+					
+					try {
+						checkMeasurements();
+						if 		(tmp_input.equals("3"))	erDetailed();
+						else if (tmp_input.equals("4")) EM.dempsterShaferForAll(EM.getMeasurementManager().getMeasurements());
+						else if (tmp_input.equals("5")) proveEmotion();
+					} catch (AbortException e) {
+						
+					}
+					break;
 				}
-				else if (input.equals("5")) { proveEmotion(em);	break; }
 				else {
 					
 					System.out.println("Please type the number of the action you want!");
-					input = console.readLine();
+					readLine();
 				}
 			}
 			
@@ -77,96 +80,83 @@ public class EmotionRecognizer {
 		}
 	}
 	
-	public static void loadCSV (EvidenceManager em) throws 	IOException, SecurityException, 
-															IllegalArgumentException, 
-															NoSuchMethodException, 
-															IllegalAccessException, 
-															InvocationTargetException, 
-															NoSuchFieldException {
-		
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = "";
+	public static void loadCSV () {
 		
 		System.out.println("\nINFO: This will not add measurements, but replace the previous CSV");
-		System.out.print("Enter Path or (a) to abort: ");
+		System.out.print("Enter Path or (a) to abort and return to menu: ");
 		
 		while (true) {
 			
-			input = console.readLine();
-			
 			try {
 				
+				input = console.readLine();
 				if (input.equals("a")) return;
-				em.getMeasurementManager().measurementReader(input);
+				EM.getMeasurementManager().measurementReader(input);
 				break;
-			} catch (FileNotFoundException e) {
+			} catch (IllegalArgumentException e) {
+				
+				System.out.println("This file does not comply with the requirements.\n"
+						+ "It must be a CSV file with the following format:\n"
+						+ "1. A header line for your orientation (will be ignored in this program)\n"
+						+ "2. The following lines are representing the single frames and must be"
+						+ "like this: ID;Speed;Pitch;Intensity whereas \n"
+						+ "\t\t- ID is an integer value \n "
+						+ "\t\t- Speed is a float value \n"
+						+ "\t\t- Pitch and Intensity values are one of the following Strings:\n"
+						+ "\t\t\t > 'sehr niedrig' or 'very low' \n"
+						+ "\t\t\t > 'niedrig' or 'low' \n"
+						+ "\t\t\t > 'normal'\n"
+						+ "\t\t\t > 'hoch' or 'high' \n"
+						+ "\t\t\t > 'sehr hoch' or 'very high' \n"
+						+ "Please enter a correct path!");
+			} catch (Exception e) {
 				
 				System.out.println("Cannot find this file, please enter a correct path!");
-			}	
+			}
 		}
 		
 		System.out.println("Successfully Loaded.");
 	}
 
-	public static void changeAcc (EvidenceManager em) throws SecurityException, IllegalArgumentException, IOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+	public static void changeAcc () {
 		
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input ="";
-		float acc = 0;
+		int acc = 0;
 		
-		System.out.println("\nEnter tolerance value or (a) to abort: ");
+		System.out.println("\nEnter tolerance value or (a) to abort and return to menu: ");
 		
 		while (true) {
 			
-			input = console.readLine();
+			readLine();
 			
 			try {
 
 				if (input.equals("a")) return;
-				acc = Float.parseFloat(input);
-				em.setAccuracy(acc);
+				acc = Integer.parseInt(input);
+				EM.setAccuracy(acc);
 				break;
 			} catch (Exception e) {
 				
-				System.out.println("You have to enter a valid number between 0 and 3!");
+				System.out.println("You have to enter a valid integer number between 0 and 3!");
 			}
 		}
 	}
 	
-	public static void erDetailed (EvidenceManager em) throws	IOException, SecurityException, 
-																IllegalArgumentException, 
-																NoSuchMethodException, 
-																IllegalAccessException, 
-																InvocationTargetException, 
-																NoSuchFieldException {
-				
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = ""; 
+	public static void erDetailed () {
+	
 		int index = 0;
 		
-		if (em.getMeasurementManager().getMeasurements().isEmpty()) {
-			
-			System.out.println("\nYou have no measurements. Please load a CSV with your measurements."
-					+ "\nIf you have done this already your file might have the wrong format."
-					+ "\nIn this case please read the documentation to see what format is needed.");
-			
-			loadCSV(em);
-			erDetailed(em);
-			return;
-		}
-		
-		System.out.println("\nEnter frame number or (a) to abort: ");
+		System.out.println("\nEnter frame number or (a) to abort and return to menu: ");
 		
 		while (true) {
 			
-			input = console.readLine();
+			readLine();
 			
 			try {
 
 				if (input.equals("a")) return;
-				index = Integer.parseInt(input);
-				Measurement m = em.getMeasurementManager().getMeasurement(index);
-				em.dempsterShaferDetailed(m);
+				index = Integer.parseInt(input) - 1;
+				Measurement m = EM.getMeasurementManager().getMeasurement(index);
+				EM.dempsterShaferDetailed(m);
 				break;
 			} catch (Exception e) {
 				
@@ -176,31 +166,55 @@ public class EmotionRecognizer {
 		}
 	}
 	
-	public static void proveEmotion (EvidenceManager em) throws IOException {
+	public static void proveEmotion () {
 		
-		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		String input = "";
-		
-		System.out.println("\nEnter the name of the emotion you want to prove or (a) to abort: ");
+		System.out.println("\nEnter the name of the emotion you want to prove or (a) to abort and return to menu: ");
 		
 		while (true) {
 			
-			input = console.readLine();
+			readLine();
 			
 			try {
 
 				if (input.equals("a")) return;
-				em.dempsterShaferProveEmotion(em.getMeasurementManager().getMeasurements(), input);
+				EM.dempsterShaferProveEmotion(EM.getMeasurementManager().getMeasurements(), input);
 				break;
 			} catch (Exception e) {
 				
 				System.out.println("You have to enter one of the following emotions:");
-				for (Emotion emotion : em.getEmotionManager().getEmotions()) {
+				for (Emotion emotion : EM.getEmotionManager().getEmotions()) {
 				
 					System.out.print(emotion.getName() + " ");
 				}
 				System.out.println();
 			}
+		}
+	}
+	
+	public static void checkMeasurements() throws AbortException {
+		
+		if(input.equals("a")) throw new AbortException();
+		
+		if (EM.getMeasurementManager().getMeasurements().isEmpty()) {
+			
+			System.out.println("\nYou have no measurements. Please load a CSV with your measurements."
+					+ "\nIf you have done this already your file might have the wrong format."
+					+ "\nIn this case please read the documentation to see what format is needed.");
+			
+			loadCSV();
+			checkMeasurements();
+			return;
+		}
+	}
+	
+	public static void readLine () {
+		
+		try {
+			
+			input = console.readLine();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
 		}
 	}
 }
