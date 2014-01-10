@@ -39,7 +39,7 @@ public class EmotionRecognizer {
 			System.out.println("| Menu:                                                             |");
 			System.out.println("| (1) Load CSV                                                      |");
 			System.out.println("| (2) Set Tolerance (Current: "
-									+ String.format("%1.1f", EM.getAccuracy()) 
+									+ String.format("%1.1f", EM.getTolerance()) 
 															  + ")                                  |");
 			System.out.println("| (3) Emotion Recognition for one Frame (with Details)              |");
 			System.out.println("| (4) Emotion Recognition for all Frames                            |");
@@ -53,22 +53,23 @@ public class EmotionRecognizer {
 			while (true) {
 				
 				if		(input.equals("1")) { loadCSV();   break; } 
-				else if	(input.equals("2")) { changeAcc(); break; }
+				else if	(input.equals("2")) { changeTolerance(); break; }
 				
 				else if (input.equals("3") || input.equals("4") || input.equals("5")) {
 					
 					tmp_input = input;
 					
 					try {
+						
 						checkMeasurements();
 						if 		(tmp_input.equals("3"))	erDetailed();
 						else if (tmp_input.equals("4")) EM.dempsterShaferForAll(EM.getMeasurementManager().getMeasurements());
 						else if (tmp_input.equals("5")) proveEmotion();
-					} catch (AbortException e) {
-						
-					}
+					} catch (AbortException e) {}
+					
 					break;
 				}
+				
 				else {
 					
 					System.out.println("Please type the number of the action you want!");
@@ -118,9 +119,7 @@ public class EmotionRecognizer {
 		System.out.println("Successfully Loaded.");
 	}
 
-	public static void changeAcc () {
-		
-		int acc = 0;
+	public static void changeTolerance () {
 		
 		System.out.println("\nEnter tolerance value or (a) to abort and return to menu: ");
 		
@@ -131,8 +130,7 @@ public class EmotionRecognizer {
 			try {
 
 				if (input.equals("a")) return;
-				acc = Integer.parseInt(input);
-				EM.setAccuracy(acc);
+				EM.setTolerance(Integer.parseInt(input));
 				break;
 			} catch (Exception e) {
 				
@@ -143,8 +141,6 @@ public class EmotionRecognizer {
 	
 	public static void erDetailed () {
 	
-		int index = 0;
-		
 		System.out.println("\nEnter frame number or (a) to abort and return to menu: ");
 		
 		while (true) {
@@ -154,13 +150,12 @@ public class EmotionRecognizer {
 			try {
 
 				if (input.equals("a")) return;
-				index = Integer.parseInt(input) - 1;
-				Measurement m = EM.getMeasurementManager().getMeasurement(index);
+				Measurement m = EM.getMeasurementManager().getMeasurement(Integer.parseInt(input) - 1);
 				EM.dempsterShaferDetailed(m);
 				break;
 			} catch (Exception e) {
 				
-				System.out.println("You don't have a frame with the ID #" + index + " in your data, "
+				System.out.println("You don't have a frame with the ID #" + (Integer.parseInt(input) - 1) + " in your data, "
 						+ "please enter a valid frame number!");
 			}
 		}

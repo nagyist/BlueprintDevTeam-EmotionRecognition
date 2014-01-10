@@ -38,23 +38,11 @@ public abstract class Marker {
 		return Speed;
 	}
 
-	public void setSpeed(float speed) {
-		Speed = speed;
-	}
-
 	public int getPitch() {
 		return Pitch;
-	}
-
-	public void setPitch(int pitch) {
-		Pitch = pitch;
 	}
 	
 	public int getIntensity() {
 		return Intensity;
-	}
-
-	public void setIntensity(int intensity) {
-		Intensity = intensity;
 	}
 }

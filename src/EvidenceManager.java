@@ -10,7 +10,7 @@ public class EvidenceManager {
 	private MeasurementManager MeasurementManager;
 	private Map<String, Evidence> BasicEvidences;
 	private Set<Evidence> EvidenceMatrix;
-	private int Accuracy;
+	private int Tolerance;
 	private String[] Marker;
 	private float Correction;
 	
@@ -18,10 +18,12 @@ public class EvidenceManager {
 	
 		EmotionManager = new EmotionManager();
 		MeasurementManager = new MeasurementManager();
+		
 		BasicEvidences = new HashMap<String, Evidence>();
 		EvidenceMatrix = new HashSet<Evidence>();
-		Accuracy = a;
 		Marker = new Emotion("dummy", 0f, 0, 0).getMarkers();
+		
+		Tolerance = a;
 		Correction = 1.0f;
 	}
 	
@@ -33,9 +35,9 @@ public class EvidenceManager {
 				m.ID, m.Speed, m.Pitch, m.Intensity));
 		
 		System.out.println("correction: " + Correction);
-		for (Emotion e : getEmotionManager().getEmotions()) {
+		for (Emotion e : EmotionManager.getEmotions()) {
 		
-			System.out.println(String.format("%s: %1.3f", e.getName(), calcPlausibility(e.getName(), Correction)));
+			System.out.println(String.format("%s: %1.4f", e.getName(), calcPlausibility(e.getName(), Correction)));
 		}
 	}
 	
@@ -45,7 +47,7 @@ public class EvidenceManager {
 		String emotionsForP, print;
 		Map<String, Integer> occurences = new HashMap<String, Integer>();
 		
-		for (Emotion emotion : getEmotionManager().getEmotions()) {
+		for (Emotion emotion : EmotionManager.getEmotions()) {
 			
 			occurences.put(emotion.getName(), 0);
 		}
@@ -59,7 +61,7 @@ public class EvidenceManager {
 			emotionsForP = null;
 			print = null;
 			
-			for (Emotion e : getEmotionManager().getEmotions()) {
+			for (Emotion e : EmotionManager.getEmotions()) {
 				
 				if (calcPlausibility(e.getName(), Correction) > p) {
 					
@@ -85,7 +87,7 @@ public class EvidenceManager {
 		
 		System.out.println("\nStatistics (abolute & relative):");
 		
-		for (Emotion emotion : getEmotionManager().getEmotions()) {
+		for (Emotion emotion : EmotionManager.getEmotions()) {
 			
 			System.out.println(String.format("%-7s %2d (%3.0f%%)", emotion.getName(), 
 					occurences.get(emotion.getName()), 
@@ -105,7 +107,7 @@ public class EvidenceManager {
 			
 			dempsterShaferSetUp(m);
 			p = calcPlausibility(name, Correction);
-			System.out.println(String.format("%2d. %1.3f", m.ID, p));
+			System.out.println(String.format("%2d. %1.4f", m.ID, p));
 		}
 	}
 	
@@ -121,20 +123,19 @@ public class EvidenceManager {
 		
 		for (int i = 1; i < Marker.length; i++) {
 						
-			String[] s = {Marker[i], Marker[i] + "Omega"};
-			EvidenceMatrix = combineEvidences(s, EvidenceMatrix);
+			EvidenceMatrix = combineEvidences(Marker[i], EvidenceMatrix);
 		}
 		
 		calcCorrection();
 	}
 	
-	public float calcPlausibility (String en, float c) {
+	public float calcPlausibility (String emotionname, float c) {
 		
 		float p = 0f;
 		
 		for (Evidence e : EvidenceMatrix) {
 			
-			if(e.getEmotionnames().contains(en)) p += e.getWeight();
+			if(e.getEmotionnames().contains(emotionname)) p += e.getWeight();
 		}
 		
 		p = p * c;
@@ -157,36 +158,37 @@ public class EvidenceManager {
 		Correction = 1/(1-c);
 	}
 	
-	public Set<Evidence> combineEvidences (String[] e1, Set<Evidence> row) {
+	public Set<Evidence> combineEvidences (String markername, Set<Evidence> row) {
 		
-		Set<Evidence> col = new HashSet<Evidence>(),
-					  ec = new HashSet<Evidence>();
-		
-		Set<String> intersection = new HashSet<String>();
+		Set<Evidence> column = new HashSet<Evidence>(),
+					  combined_evidences = new HashSet<Evidence>();
+		Set<String> intersection_emotionnames;
 
-		for (String s : e1)	col.add(BasicEvidences.get(s));
+		column.add(BasicEvidences.get(markername));
+		column.add(BasicEvidences.get(markername + "Omega"));
 		
-		for (Evidence c : col) {
+		for (Evidence e1 : column) {
 			
-			for (Evidence r : row) {
+			for (Evidence e2 : row) {
 				
-				intersection = new HashSet<String>(c.getEmotionnames());
-				intersection.retainAll(r.getEmotionnames());
-				ec.add(new Evidence(intersection, c.getWeight() * r.getWeight()));
+				intersection_emotionnames = new HashSet<String>(e1.getEmotionnames());
+				intersection_emotionnames.retainAll(e2.getEmotionnames());
+				combined_evidences.add(new Evidence(intersection_emotionnames, 
+													e1.getWeight() * e2.getWeight()));
 			}
 		}
 		
-		return ec;
+		return combined_evidences;
 	}
 	
 	public void generateBasicEvidences (Measurement m) {
 		
 		for (String marker : Marker) {
 			
-			for (Emotion e : getEmotionManager().getEmotions()) {
+			for (Emotion e : EmotionManager.getEmotions()) {
 			
-				if( e.getAttributeValue(marker) <= m.getAttributeValue(marker) + Accuracy &&
-						e.getAttributeValue(marker) >= m.getAttributeValue(marker) - Accuracy) {
+				if( e.getAttributeValue(marker) <= m.getAttributeValue(marker) + Tolerance &&
+						e.getAttributeValue(marker) >= m.getAttributeValue(marker) - Tolerance) {
 					
 					BasicEvidences.get(marker).addEmotionname(e.getName());
 				}
@@ -212,15 +214,15 @@ public class EvidenceManager {
 		}
 	}
 	
-	public float getAccuracy () {
+	public float getTolerance () {
 		
-		return Accuracy;
+		return Tolerance;
 	}
 	
-	public void setAccuracy (int acc) {
+	public void setTolerance (int t) {
 		
-		if (acc > 3 || acc < 0)	throw new IllegalArgumentException();
-		else					Accuracy = acc;
+		if (t > 3 || t < 0)	throw new IllegalArgumentException();
+		else					Tolerance = t;
 	}
 
 	public MeasurementManager getMeasurementManager() {
