@@ -11,11 +11,6 @@ public class EmotionRecognizer {
 	
 	/* TODO Finale Checks:
 	 * Kommentare entfernen
-	 * Einheitliche Bezeichner (z.B. e ist immer Emotionion und nicht mal Emotion und mal Emotionen-Liste)
-	 * Was public, was private, was ... ???
-	 * Konventionen (Gro§-/Kleinschreibung)
-	 * richtige Verwendung von Frame/Takt/Beat,...
-	 * unnštige Exceptions entfernen
 	 */
 	public static void main(String[] args) {
 		
