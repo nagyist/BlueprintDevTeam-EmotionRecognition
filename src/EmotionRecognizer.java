@@ -9,19 +9,11 @@ public class EmotionRecognizer {
 	private static BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 	private static String input ="";
 	
-	/* TODO Finale Checks:
-	 * Kommentare entfernen
-	 * Nicht alles "evidence" nennen, einiges sind auch features
-	 * Marker zu features machen
-	 */
 	public static void main(String[] args) {
 		
 		
 		
 		EM.getEmotionManager().loadDefault();
-		
-		//TODO: Folgende Zeile NUR fuer debugging! 
-		try {EM.getMeasurementManager().measurementReader("../EmotionRecognition/E_020/E_020.csv");} catch (IOException e) {}
 		
 		menu();
 	}
