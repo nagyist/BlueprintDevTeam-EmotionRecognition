@@ -99,7 +99,7 @@ public class EvidenceManager {
 		
 		if (!EmotionManager.containsEmotion(name)) throw new IllegalArgumentException();
 		
-		float p;
+		float p, average = 0;
 		
 		System.out.println("Plausibility for '" + name + "' per frame:");
 		
@@ -108,7 +108,11 @@ public class EvidenceManager {
 			dempsterShaferSetUp(m);
 			p = calcPlausibility(name, Correction);
 			System.out.println(String.format("%2d. %1.4f", m.ID, p));
+			average += p;
 		}
+		
+		average = average / measurements.size();
+		System.out.println(String.format("\nAverage Plausibility: %1.4f%%", average));
 	}
 	
 	public void dempsterShaferSetUp (Measurement m) {

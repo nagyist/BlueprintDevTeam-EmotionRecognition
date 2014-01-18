@@ -11,6 +11,8 @@ public class EmotionRecognizer {
 	
 	/* TODO Finale Checks:
 	 * Kommentare entfernen
+	 * Nicht alles "evidence" nennen, einiges sind auch features
+	 * Marker zu features machen
 	 */
 	public static void main(String[] args) {
 		
@@ -36,8 +38,8 @@ public class EmotionRecognizer {
 			System.out.println("| (2) Set Tolerance (Current: "
 									+ String.format("%1.1f", EM.getTolerance()) 
 															  + ")                                  |");
-			System.out.println("| (3) Emotion Recognition for one Frame (with Details)              |");
-			System.out.println("| (4) Emotion Recognition for all Frames                            |");
+			System.out.println("| (3) Emotion Recognition for all Frames                            |");
+			System.out.println("| (4) Emotion Recognition for one Frame (with Details)              |");
 			System.out.println("| (5) Prove Plausibility for a Single Emotion                       |");
 			System.out.println("|                                                                   |");
 			System.out.println("| INFO: (a) will abort all submenus and bring you back to this one. |");
@@ -57,8 +59,8 @@ public class EmotionRecognizer {
 					try {
 						
 						checkMeasurements();
-						if 		(tmp_input.equals("3"))	erDetailed();
-						else if (tmp_input.equals("4")) EM.dempsterShaferForAll(EM.getMeasurementManager().getMeasurements());
+						if 		(tmp_input.equals("3"))	EM.dempsterShaferForAll(EM.getMeasurementManager().getMeasurements());
+						else if (tmp_input.equals("4")) erDetailed();
 						else if (tmp_input.equals("5")) proveEmotion();
 					} catch (AbortException e) {}
 					
